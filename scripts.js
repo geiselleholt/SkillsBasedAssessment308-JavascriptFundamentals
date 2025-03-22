@@ -25,22 +25,6 @@
 // Use try/catch and other logic to handle these types of errors gracefully.
 // If an assignment is not yet due, do not include it in the results or the average. Additionally, if the learner’s submission is late (submitted_at is past due_at), deduct 10 percent of the total points possible from their score for that assignment.
 
-function getLearnerData(course, ag, submissions) {
-  let expectedOutput = [];
-  let learnerIDs = [];
-
-  for (let i = 0; i < submissions.length; i++) {
-    if (learnerIDs.includes(submissions[i].learner_id)) {
-      continue;
-    } else {
-      learnerIDs.push(submissions[i].learner_id)
-      let learnerData = { id: submissions[i].learner_id };
-      expectedOutput.push(learnerData);
-    }
-  }
-  return expectedOutput;
-}
-
 // The provided course information.
 const CourseInfo = {
   id: 451,
@@ -119,8 +103,56 @@ const LearnerSubmissions = [
   },
 ];
 
-const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
-console.log(result);
+//START OF CODE
+
+let expectedOutput = [];
+let learnerIDs = [];
+
+for (let i = 0; i < LearnerSubmissions.length; i++) {
+  if (learnerIDs.includes(LearnerSubmissions[i].learner_id)) {
+    continue;
+  } else {
+    learnerIDs.push(LearnerSubmissions[i].learner_id);
+    let learnerData = { id: LearnerSubmissions[i].learner_id };
+    expectedOutput.push(learnerData);
+  }
+}
+
+let learnerData = [];
+learnerIDs.forEach((ID) => {
+  let searchID = LearnerSubmissions.filter((item) => item.learner_id === ID);
+  for (let i = 0; i < AssignmentGroup.assignments.length; i++) {
+    let assignment = searchID.filter(
+      (item) => item.assignment_id === AssignmentGroup.assignments[i].id
+    );
+    if (assignment == false) {
+      continue;
+    } else {
+      let assignmentInfo = {
+        score: assignment[0].submission.score,
+        pointsPossible: AssignmentGroup.assignments[i].points_possible,
+        id: ID,
+        submittedAt: assignment[0].submission.submitted_at,
+        dueAt: AssignmentGroup.assignments[i].due_at,
+      };
+      learnerData.push(assignmentInfo);
+    }
+  }
+});
+// console.log(learnerData);
+
+learnerData.forEach((data) => {
+  if (data.dueAt >= data.submittedAt) {
+    console.log(`on time`);
+  } else {
+    console.log(`late`);
+  }
+  if (data.dueAt > "2025-03-22") {
+    console.log(`not due yet`);
+  } else {
+    console.log(`due`);
+  }
+});
 
 // EXPECTED OUTPUT:
 //  [
