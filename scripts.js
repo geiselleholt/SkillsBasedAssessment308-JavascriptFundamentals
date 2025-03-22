@@ -25,28 +25,21 @@
 // Use try/catch and other logic to handle these types of errors gracefully.
 // If an assignment is not yet due, do not include it in the results or the average. Additionally, if the learner’s submission is late (submitted_at is past due_at), deduct 10 percent of the total points possible from their score for that assignment.
 
-
-let expectedOutput = []
-let learnerAnalysis = {
-    id: '',
-    avg: '',
-}
-let learners = []
 function getLearnerData(course, ag, submissions) {
-    submissions.forEach(submission => {
-    if (learners.includes(submission.learner_id) == false) {
-        learnerAnalysis.id = submission.learner_id
-        learners.push(submission.learner_id)
+  let expectedOutput = [];
+  let learnerIDs = [];
+
+  for (let i = 0; i < submissions.length; i++) {
+    if (learnerIDs.includes(submissions[i].learner_id)) {
+      continue;
     } else {
-        console.log("ok")
+      learnerIDs.push(submissions[i].learner_id)
+      let learnerData = { id: submissions[i].learner_id };
+      expectedOutput.push(learnerData);
     }
-});
-console.log(learnerAnalysis)
-
-//   return result;
+  }
+  return expectedOutput;
 }
-
-
 
 // The provided course information.
 const CourseInfo = {
@@ -128,7 +121,6 @@ const LearnerSubmissions = [
 
 const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
 console.log(result);
-
 
 // EXPECTED OUTPUT:
 //  [
