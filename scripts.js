@@ -108,27 +108,12 @@ const LearnerSubmissions = [
 
 function getLearnerData(course, ag, submissions) {
   let expectedOutput = [];
-
-
   try {
     // check if course id matches- if not throw error
     if (course.id !== ag.course_id) {
       throw `Invaid Input: Course ID does not match`;
     } else {
       let learnerData = reviseLearnerData(ag, submissions);
-
-      learnerData.forEach((data) => {
-        // loop the each assignment in learnerData
-        if (data.dueAt < data.submittedAt) {
-          data.score = data.score * 0.9; // if the assignment was late, deduct 10%
-        }
-        if (data.dueAt > "2025-03-22") {
-          // if assignment isn't due yet, take it out of the array learnerData
-
-          let index = learnerData.indexOf(data);
-          learnerData.splice(index, 1);
-        }
-      });
 
       for (let i = 0; i < learnerData.length - 1; i++) {
         //loop thru each assignment in learnerData
@@ -224,6 +209,20 @@ function reviseLearnerData(ag, submissions) {
       }
     }
   });
+
+  learnerData.forEach((data) => {
+    // loop the each assignment in learnerData
+    if (data.dueAt < data.submittedAt) {
+      data.score = data.score * 0.9; // if the assignment was late, deduct 10%
+    }
+    if (data.dueAt > "2025-03-22") {
+      // if assignment isn't due yet, take it out of the array learnerData
+
+      let index = learnerData.indexOf(data);
+      learnerData.splice(index, 1);
+    }
+  });
+
   return learnerData;
 }
 
