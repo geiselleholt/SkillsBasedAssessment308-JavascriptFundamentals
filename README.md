@@ -1,6 +1,6 @@
-Hafa Adai 🌸
+##Hafa Adai 🌸
 
-This repo is my Skills Based Assessment, SBA 308: JavaScript Fundamentals, for my Per Scholas bootcamp.
+###This repo is my Skills Based Assessment, SBA 308: JavaScript Fundamentals, for Per Scholas. We just ended our 4th week of the 16 week Software Development bootcamp. We had 2 days to complete this assessment.
 
 This assessment is to gauge my understanding of fundamental JavaScript concepts and my ability to apply these concepts in a practical manner. Specifically:
 -Employ basic JavaScript syntax accurately.
@@ -10,8 +10,18 @@ This assessment is to gauge my understanding of fundamental JavaScript concepts 
 -Utilize loops and iteration to navigate through data collections.
 -Implement error handling to manage potential code failures gracefully.
 
- We just ended our 4th week of the 16 week Software Development bootcamp. We had 2 days to complete this assessment. If I had more time I would:
--BUG: My code can't handle if a learner has 3 assignments
+ 
+###REFLECTION QUESTIONS:
+
+What could you have done differently during the planning stages of your project to make the execution easier?
+I could have printed to given data out and reviewed it side by side. I could have drawn lines to connect the data from one array to another. I could have made a list or notes or psuedocoded what I needed to do before starting to code.
+
+Were there any requirements that were difficult to implement? What do you think would make them easier to implement in future projects?
+I had a lot of trouble comparing to arrays of objects and extracting data if they matched and putting that data into a new array of objects. If I would have planned it out first, I could have asked questions in office hours. By the time I knew I needed help it was the weekend so I stayed blocked for a long time and tried 100 different approaches (some twice because I forgot I tried that already) before I finally got .filter nested in a .filter to work 😵‍💫
+
+What would you add to, or change about your application if given more time?
+If I had more time I would:
+-FIX THIS BUG: My code doesn't work if a learner has 3 assignments
 -Rename my variables so the code is more understandable 
 -Try to break code up into helper functions 
 -Try to get a simplier approach to work not using .filter
