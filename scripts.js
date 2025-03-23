@@ -104,8 +104,8 @@ const LearnerSubmissions = [
   },
 ];
 
-//***** START OF CODE ******
-
+//********************** START OF CODE ************************
+// MAIN CODE
 function getLearnerData(course, ag, submissions) {
   let expectedOutput = [];
   try {
@@ -113,39 +113,39 @@ function getLearnerData(course, ag, submissions) {
     if (course.id !== ag.course_id) {
       throw `Invaid Input: Course ID does not match`;
     } else {
-      let learnerData = reviseLearnerData(ag, submissions);
-
-      for (let i = 0; i < learnerData.length - 1; i++) {
-        //loop thru each assignment in learnerData
-        const learnerObj = { id: learnerData[i].learner_id };
-        //create object 'learnerObj' for each learner's data, add id as aproperty
-        let assignmentID = learnerData[i].assignment_id;
+      let assignmentData = getAssignmentData(ag, submissions);
+      // Using Helper function #2
+      for (let i = 0; i < assignmentData.length - 1; i++) {
+        //loop thru each assignment in assignmentData
+        const learnerData = { id: assignmentData[i].learner_id };
+        //create object 'learnerData' for each learner's data, add id as aproperty
+        let assignmentID = assignmentData[i].assignment_id;
         //create variable for assignment number to use as key for 1st assignment
         let assignmentPercentage2 =
-          learnerData[i].score / learnerData[i].pointsPossible;
+          assignmentData[i].score / assignmentData[i].pointsPossible;
         // create variable for assignment % to use as value for 1st assigment
-        learnerObj[assignmentID] = assignmentPercentage2;
+        learnerData[assignmentID] = assignmentPercentage2;
         // add 1st assignment as a property to Learner Object
-        learnerObj.avg = learnerData[i].score / learnerData[i].pointsPossible;
+        learnerData.avg = assignmentData[i].score / assignmentData[i].pointsPossible;
         //add average as aproperty to Learner Object
-        if (learnerData[i].learner_id == learnerData[i + 1].learner_id) {
+        if (assignmentData[i].learner_id == assignmentData[i + 1].learner_id) {
           //check if learner id matches learner id in the next assignment odject
-          let assignmentID2 = learnerData[i + 1].assignment_id;
+          let assignmentID2 = assignmentData[i + 1].assignment_id;
           //if yes- create variable for assignment number to use as key for 2nd assignment
-          let score = learnerData[i].score + learnerData[i + 1].score;
+          let score = assignmentData[i].score + assignmentData[i + 1].score;
           //combine scores together
           let pointsPossible =
-            learnerData[i].pointsPossible + learnerData[i + 1].pointsPossible;
+            assignmentData[i].pointsPossible + assignmentData[i + 1].pointsPossible;
           //combine possible points together
-          learnerObj.avg = score / pointsPossible;
-          // replace previous ave property in learnerObj
-          learnerObj[assignmentID2] =
-            learnerData[i + 1].score / learnerData[i + 1].pointsPossible;
+          learnerData.avg = score / pointsPossible;
+          // replace previous ave property in learnerData
+          learnerData[assignmentID2] =
+            assignmentData[i + 1].score / assignmentData[i + 1].pointsPossible;
           // add 2nd assignment as a property to Learner Object
         } else {
           continue;
         }
-        expectedOutput.push(learnerObj);
+        expectedOutput.push(learnerData);
       }
     }
   } catch (err) {
@@ -157,6 +157,8 @@ function getLearnerData(course, ag, submissions) {
 const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
 console.log(result);
 
+
+// HELPER FUNCTION #1
 function getLearnerIDs(submissions) {
   let learnerIDs = [];
   for (let i = 0; i < submissions.length; i++) {
@@ -170,9 +172,11 @@ function getLearnerIDs(submissions) {
   return learnerIDs
 }
 
-function reviseLearnerData(ag, submissions) {
+// HELPER FUNCTION #2
+function getAssignmentData(ag, submissions) {
   let learnerIDs = getLearnerIDs(submissions)
-  let learnerData = [];
+  //Using helper function #1
+  let assignmentData = [];
   learnerIDs.forEach((ID) => {
     //looping thru the learnerIDs array
     let searchID = submissions.filter((item) => item.learner_id === ID);
@@ -200,8 +204,8 @@ function reviseLearnerData(ag, submissions) {
               dueAt: ag.assignments[i].due_at,
               assignment_id: ag.assignments[i].id,
             };
-            learnerData.push(assignmentInfo);
-            //push each assignment object into an array learnerData
+            assignmentData.push(assignmentInfo);
+            //push each assignment object into an array assignmentData
           }
         } catch (err) {
           console.log(err);
@@ -210,24 +214,24 @@ function reviseLearnerData(ag, submissions) {
     }
   });
 
-  learnerData.forEach((data) => {
-    // loop the each assignment in learnerData
+  assignmentData.forEach((data) => {
+    // loop the each assignment in assignmentData
     if (data.dueAt < data.submittedAt) {
       data.score = data.score * 0.9; // if the assignment was late, deduct 10%
     }
     if (data.dueAt > "2025-03-22") {
-      // if assignment isn't due yet, take it out of the array learnerData
+      // if assignment isn't due yet, take it out of the array assignmentData
 
-      let index = learnerData.indexOf(data);
-      learnerData.splice(index, 1);
+      let index = assignmentData.indexOf(data);
+      assignmentData.splice(index, 1);
     }
   });
 
-  return learnerData;
+  return assignmentData;
 }
 
-// console.log(learnerData)
-//final output of learnerData to use to build expected output
+// console.log(assignmentData)
+//final output of assignmentData to use to build Expected Output
 //LEARNER DATA:
 // [
 //   {
@@ -264,7 +268,7 @@ function reviseLearnerData(ag, submissions) {
 //   }
 // ]
 
-//*****************
+//*******************************
 // MY OUTPUT:
 //[
 //   { '1': 0.94,
@@ -283,14 +287,14 @@ function reviseLearnerData(ag, submissions) {
 //  [
 //     {
 //       id: 125,
-//       avg: 0.985, // (47 + 150) / (50 + 150)
-//       1: 0.94, // 47 / 50
-//       2: 1.0 // 150 / 150
+//       avg: 0.985,           // (47 + 150) / (50 + 150)
+//       1: 0.94,              // 47 / 50
+//       2: 1.0                // 150 / 150
 //     },
 //     {
 //       id: 132,
-//       avg: 0.82, // (39 + 125) / (50 + 150)
-//       1: 0.78, // 39 / 50
-//       2: 0.833 // late: (140 - 15) / 150
+//       avg: 0.82,             // (39 + 125) / (50 + 150)
+//       1: 0.78,               // 39 / 50
+//       2: 0.833               // late: (140 - 15) / 150
 //     }
 //   ];
