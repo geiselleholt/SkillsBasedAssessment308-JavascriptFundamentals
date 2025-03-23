@@ -17,13 +17,14 @@
 
 //     // if an assignment is not yet due, it should not be included in either
 //     // the average or the keyed dictionary of scores
+
+//     // Additionally, if the learner’s submission is late (submitted_at is past due_at), deduct 10 percent of the total points possible from their score for that assignment.
 // }
 
 // Afterwards, alter the data to test for edge cases, error handling, and other potential issues.
 // If an AssignmentGroup does not belong to its course (mismatching course_id), your program should throw an error, letting the user know that the input was invalid. Similar data validation should occur elsewhere within the program.
 // You should also account for potential errors in the data that your program receives. What if points_possible is 0? You cannot divide by zero. What if a value that you are expecting to be a number is instead a string?
 // Use try/catch and other logic to handle these types of errors gracefully.
-// If an assignment is not yet due, do not include it in the results or the average. Additionally, if the learner’s submission is late (submitted_at is past due_at), deduct 10 percent of the total points possible from their score for that assignment.
 
 // The provided course information.
 const CourseInfo = {
@@ -113,8 +114,8 @@ for (let i = 0; i < LearnerSubmissions.length; i++) {
     continue;
   } else {
     learnerIDs.push(LearnerSubmissions[i].learner_id);
-    let learnerData = { id: LearnerSubmissions[i].learner_id };
-    expectedOutput.push(learnerData);
+    // let learnerData = { id: LearnerSubmissions[i].learner_id };
+    // expectedOutput.push(learnerData);
   }
 }
 
@@ -131,28 +132,45 @@ learnerIDs.forEach((ID) => {
       let assignmentInfo = {
         score: assignment[0].submission.score,
         pointsPossible: AssignmentGroup.assignments[i].points_possible,
-        id: ID,
+        learner_id: ID,
         submittedAt: assignment[0].submission.submitted_at,
         dueAt: AssignmentGroup.assignments[i].due_at,
+        assignment_id: AssignmentGroup.assignments[i].id,
       };
       learnerData.push(assignmentInfo);
     }
   }
 });
-// console.log(learnerData);
+
 
 learnerData.forEach((data) => {
-  if (data.dueAt >= data.submittedAt) {
-    console.log(`on time`);
-  } else {
-    console.log(`late`);
+  if (data.dueAt < data.submittedAt) {
+    data.score = data.score * 0.9;
   }
   if (data.dueAt > "2025-03-22") {
-    console.log(`not due yet`);
-  } else {
-    console.log(`due`);
+    let index = learnerData.indexOf(data);
+    learnerData.splice(index, 1);
   }
 });
+// console.log(learnerData)
+
+let learnerIDs2 = [];
+for (let i = 0; i < learnerData.length - 1; i++){
+  let assignmentPercentage2 = learnerData[i].score / learnerData[i].pointsPossible;
+  let learnerObj = {id: learnerData[i].learner_id, 1: assignmentPercentage2 }
+  if (learnerData[i].learner_id == learnerData[i + 1].learner_id) {
+    let score = learnerData[i].score + learnerData[i + 1].score;
+    let pointsPossible = learnerData[i].pointsPossible + learnerData[i + 1].pointsPossible
+    let average = score / pointsPossible;
+    let assignmentID = learnerData[i + 1].assignment_id
+    assignmentPercentage = learnerData[i + 1].score / learnerData[i + 1].pointsPossible
+    learnerObj.avg = average;
+    learnerObj[assignmentID] = assignmentPercentage;
+  
+    expectedOutput.push(learnerObj)
+  }
+}
+console.log(expectedOutput)
 
 // EXPECTED OUTPUT:
 //  [
