@@ -108,59 +108,14 @@ const LearnerSubmissions = [
 
 function getLearnerData(course, ag, submissions) {
   let expectedOutput = [];
-  let learnerIDs = [];
+
 
   try {
     // check if course id matches- if not throw error
     if (course.id !== ag.course_id) {
       throw `Invaid Input: Course ID does not match`;
     } else {
-      for (let i = 0; i < submissions.length; i++) {
-        // finding all learner IDs and pushing to array 'learnerIDs'
-        if (learnerIDs.includes(submissions[i].learner_id)) {
-          continue;
-        } else {
-          learnerIDs.push(submissions[i].learner_id);
-        }
-      }
-
-      let learnerData = [];
-      learnerIDs.forEach((ID) => {
-        //looping thru the learnerIDs array
-        let searchID = submissions.filter((item) => item.learner_id === ID);
-        // matching the learnerID to ag leaner-id
-        for (let i = 0; i < ag.assignments.length; i++) {
-          let assignment = searchID.filter(
-            //matching assignment-id in submissions to ag assignment.id
-            (item) => item.assignment_id === ag.assignments[i].id
-          );
-          if (assignment == false) {
-            //if the learner id doesn't have that assignment skip it
-            continue;
-          } else {
-            try {
-              //check if points-possible is 0 or less- if so throw error
-              if (ag.assignments[i].points_possible <= 0) {
-                throw `Invalid Input: Possible point can't be zero`;
-              } else {
-                const assignmentInfo = {
-                  //create an object with each assignments info
-                  score: assignment[0].submission.score,
-                  pointsPossible: ag.assignments[i].points_possible,
-                  learner_id: ID,
-                  submittedAt: assignment[0].submission.submitted_at,
-                  dueAt: ag.assignments[i].due_at,
-                  assignment_id: ag.assignments[i].id,
-                };
-                learnerData.push(assignmentInfo);
-                //push each assignment object into an array learnerData
-              }
-            } catch (err) {
-              console.log(err);
-            }
-          }
-        }
-      });
+      let learnerData = reviseLearnerData(ag, submissions);
 
       learnerData.forEach((data) => {
         // loop the each assignment in learnerData
@@ -175,56 +130,18 @@ function getLearnerData(course, ag, submissions) {
         }
       });
 
-      // console.log(learnerData)           
-      //final output of learnerData to use to build expected output
-      //LEARNER DATA:
-      // [
-      //   {
-      //     score: 47,
-      //     pointsPossible: 50,
-      //     learner_id: 125,
-      //     submittedAt: '2023-01-25',
-      //     dueAt: '2023-01-25',
-      //     assignment_id: 1
-      //   },
-      //   {
-      //     score: 150,
-      //     pointsPossible: 150,
-      //     learner_id: 125,
-      //     submittedAt: '2023-02-12',
-      //     dueAt: '2023-02-27',
-      //     assignment_id: 2
-      //   },
-      //   {
-      //     score: 39,
-      //     pointsPossible: 50,
-      //     learner_id: 132,
-      //     submittedAt: '2023-01-24',
-      //     dueAt: '2023-01-25',
-      //     assignment_id: 1
-      //   },
-      //   {
-      //     score: 126,
-      //     pointsPossible: 150,
-      //     learner_id: 132,
-      //     submittedAt: '2023-03-07',
-      //     dueAt: '2023-02-27',
-      //     assignment_id: 2
-      //   }
-      // ]
-
       for (let i = 0; i < learnerData.length - 1; i++) {
         //loop thru each assignment in learnerData
         const learnerObj = { id: learnerData[i].learner_id };
         //create object 'learnerObj' for each learner's data, add id as aproperty
         let assignmentID = learnerData[i].assignment_id;
         //create variable for assignment number to use as key for 1st assignment
-        let assignmentPercentage2 = 
+        let assignmentPercentage2 =
           learnerData[i].score / learnerData[i].pointsPossible;
         // create variable for assignment % to use as value for 1st assigment
-        learnerObj[assignmentID] = assignmentPercentage2; 
+        learnerObj[assignmentID] = assignmentPercentage2;
         // add 1st assignment as a property to Learner Object
-        learnerObj.avg = learnerData[i].score / learnerData[i].pointsPossible; 
+        learnerObj.avg = learnerData[i].score / learnerData[i].pointsPossible;
         //add average as aproperty to Learner Object
         if (learnerData[i].learner_id == learnerData[i + 1].learner_id) {
           //check if learner id matches learner id in the next assignment odject
@@ -234,10 +151,10 @@ function getLearnerData(course, ag, submissions) {
           //combine scores together
           let pointsPossible =
             learnerData[i].pointsPossible + learnerData[i + 1].pointsPossible;
-           //combine possible points together
+          //combine possible points together
           learnerObj.avg = score / pointsPossible;
           // replace previous ave property in learnerObj
-          learnerObj[assignmentID2] = 
+          learnerObj[assignmentID2] =
             learnerData[i + 1].score / learnerData[i + 1].pointsPossible;
           // add 2nd assignment as a property to Learner Object
         } else {
@@ -254,6 +171,99 @@ function getLearnerData(course, ag, submissions) {
 
 const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
 console.log(result);
+
+function getLearnerIDs(submissions) {
+  let learnerIDs = [];
+  for (let i = 0; i < submissions.length; i++) {
+    // finding all learner IDs and pushing to array 'learnerIDs'
+    if (learnerIDs.includes(submissions[i].learner_id)) {
+      continue;
+    } else {
+      learnerIDs.push(submissions[i].learner_id);
+    }
+  }
+  return learnerIDs
+}
+
+function reviseLearnerData(ag, submissions) {
+  let learnerIDs = getLearnerIDs(submissions)
+  let learnerData = [];
+  learnerIDs.forEach((ID) => {
+    //looping thru the learnerIDs array
+    let searchID = submissions.filter((item) => item.learner_id === ID);
+    // matching the learnerID to ag leaner-id
+    for (let i = 0; i < ag.assignments.length; i++) {
+      let assignment = searchID.filter(
+        //matching assignment-id in submissions to ag assignment.id
+        (item) => item.assignment_id === ag.assignments[i].id
+      );
+      if (assignment == false) {
+        //if the learner id doesn't have that assignment skip it
+        continue;
+      } else {
+        try {
+          //check if points-possible is 0 or less- if so throw error
+          if (ag.assignments[i].points_possible <= 0) {
+            throw `Invalid Input: Possible point can't be zero`;
+          } else {
+            const assignmentInfo = {
+              //create an object with each assignments info
+              score: assignment[0].submission.score,
+              pointsPossible: ag.assignments[i].points_possible,
+              learner_id: ID,
+              submittedAt: assignment[0].submission.submitted_at,
+              dueAt: ag.assignments[i].due_at,
+              assignment_id: ag.assignments[i].id,
+            };
+            learnerData.push(assignmentInfo);
+            //push each assignment object into an array learnerData
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    }
+  });
+  return learnerData;
+}
+
+// console.log(learnerData)
+//final output of learnerData to use to build expected output
+//LEARNER DATA:
+// [
+//   {
+//     score: 47,
+//     pointsPossible: 50,
+//     learner_id: 125,
+//     submittedAt: '2023-01-25',
+//     dueAt: '2023-01-25',
+//     assignment_id: 1
+//   },
+//   {
+//     score: 150,
+//     pointsPossible: 150,
+//     learner_id: 125,
+//     submittedAt: '2023-02-12',
+//     dueAt: '2023-02-27',
+//     assignment_id: 2
+//   },
+//   {
+//     score: 39,
+//     pointsPossible: 50,
+//     learner_id: 132,
+//     submittedAt: '2023-01-24',
+//     dueAt: '2023-01-25',
+//     assignment_id: 1
+//   },
+//   {
+//     score: 126,
+//     pointsPossible: 150,
+//     learner_id: 132,
+//     submittedAt: '2023-03-07',
+//     dueAt: '2023-02-27',
+//     assignment_id: 2
+//   }
+// ]
 
 //*****************
 // MY OUTPUT:
