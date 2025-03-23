@@ -107,7 +107,7 @@ const LearnerSubmissions = [
 //********************** START OF CODE ************************
 // MAIN CODE
 function getLearnerData(course, ag, submissions) {
-  let expectedOutput = [];
+  const expectedOutput = [];
   try {
     // check if course id matches- if not throw error
     if (course.id !== ag.course_id) {
@@ -119,7 +119,7 @@ function getLearnerData(course, ag, submissions) {
         //loop thru each assignment in assignmentData
         const learnerData = { id: assignmentData[i].learner_id };
         //create object 'learnerData' for each learner's data, add id as aproperty
-        let assignmentID = assignmentData[i].assignment_id;
+        const assignmentID = assignmentData[i].assignment_id;
         //create variable for assignment number to use as key for 1st assignment
         let assignmentPercentage2 =
           assignmentData[i].score / assignmentData[i].pointsPossible;
@@ -130,7 +130,7 @@ function getLearnerData(course, ag, submissions) {
         //add average as aproperty to Learner Object
         if (assignmentData[i].learner_id == assignmentData[i + 1].learner_id) {
           //check if learner id matches learner id in the next assignment odject
-          let assignmentID2 = assignmentData[i + 1].assignment_id;
+          const assignmentID2 = assignmentData[i + 1].assignment_id;
           //if yes- create variable for assignment number to use as key for 2nd assignment
           let score = assignmentData[i].score + assignmentData[i + 1].score;
           //combine scores together
@@ -160,7 +160,7 @@ console.log(result);
 
 // HELPER FUNCTION #1
 function getLearnerIDs(submissions) {
-  let learnerIDs = [];
+  const learnerIDs = [];
   for (let i = 0; i < submissions.length; i++) {
     // finding all learner IDs and pushing to array 'learnerIDs'
     if (learnerIDs.includes(submissions[i].learner_id)) {
@@ -174,9 +174,9 @@ function getLearnerIDs(submissions) {
 
 // HELPER FUNCTION #2
 function getAssignmentData(ag, submissions) {
-  let learnerIDs = getLearnerIDs(submissions)
+  const learnerIDs = getLearnerIDs(submissions)
   //Using helper function #1
-  let assignmentData = [];
+  const assignmentData = [];
   learnerIDs.forEach((ID) => {
     //looping thru the learnerIDs array
     let searchID = submissions.filter((item) => item.learner_id === ID);
