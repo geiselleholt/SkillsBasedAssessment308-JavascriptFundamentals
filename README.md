@@ -22,7 +22,5 @@ I had a lot of trouble comparing to arrays of objects and extracting data if the
 What would you add to, or change about your application if given more time?
 If I had more time I would:
 -FIX THIS BUG: My code doesn't work if a learner has 3 assignments
--Rename my variables so the code is more understandable 
--Try to break code up into helper functions 
 -Try to get a simplier approach to work not using .filter
 -Get the assingment id key to be a number instead of a string (I could use +str and force it to be a number but I think coded it incorrectly which is why its a string)
