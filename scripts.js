@@ -99,7 +99,7 @@ const LearnerSubmissions = [
     assignment_id: 2,
     submission: {
       submitted_at: "2023-03-07",
-      score: 1400,
+      score: 140,
     },
   },
 ];
