@@ -221,7 +221,6 @@ function getAssignmentData(ag, submissions) {
     }
     if (data.dueAt > "2025-03-22") {
       // if assignment isn't due yet, take it out of the array assignmentData
-
       let index = assignmentData.indexOf(data);
       assignmentData.splice(index, 1);
     }

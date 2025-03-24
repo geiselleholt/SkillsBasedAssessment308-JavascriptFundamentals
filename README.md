@@ -4,12 +4,12 @@
 
 This assessment is to gauge my understanding of fundamental JavaScript concepts and my ability to apply these concepts in a practical manner. Specifically:
 
--Employ basic JavaScript syntax accurately.
--Implement control flow structures such as conditionals and loops effectively.
--Use arrays and objects to organize and manage data.
--Develop functions to create reusable code.
--Utilize loops and iteration to navigate through data collections.
--Implement error handling to manage potential code failures gracefully.
+- Employ basic JavaScript syntax accurately.
+- Implement control flow structures such as conditionals and loops effectively.
+- Use arrays and objects to organize and manage data.
+- Develop functions to create reusable code.
+- Utilize loops and iteration to navigate through data collections.
+- Implement error handling to manage potential code failures gracefully.
 
  
 ### REFLECTION QUESTIONS:
@@ -26,6 +26,7 @@ Were there any requirements that were difficult to implement? What do you think 
 What would you add to, or change about your application if given more time?
 If I had more time I would:
 
-    -FIX THIS BUG: My code doesn't work if a learner has 3 assignments
-    -Try to get a simplier approach to work not using .filter
-    -Get the assingment id key to be a number instead of a string (I could use +str and force it to be a number but I think I coded it incorrectly which is why its a string)
+    - FIX THIS BUG: My code doesn't work if a learner has 3 assignments
+    - FIX THIS BUG?: My code doesn't work if a learner has 2 of the same assignemnt ids (Is this a case?)
+    - Try to get a simplier approach to work not using .filter
+    - Get the assingment id key to be a number instead of a string (I could use +str and force it to be a number but I think I coded it incorrectly which is why its a string)
