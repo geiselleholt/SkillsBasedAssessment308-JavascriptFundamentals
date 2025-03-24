@@ -1,6 +1,6 @@
 // ******  INSTRUCTIONS  ********
 // Your goal is to analyze and transform this data such that the output of your program is an array of objects, each containing the following information in the following format:
-// {
+// 
 //     // the ID of the learner for which this data has been collected
 //     "id": number, ✅
 
