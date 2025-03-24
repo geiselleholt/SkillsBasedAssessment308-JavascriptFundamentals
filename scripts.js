@@ -1,6 +1,6 @@
 // ******  INSTRUCTIONS  ********
 // Your goal is to analyze and transform this data such that the output of your program is an array of objects, each containing the following information in the following format:
-// 
+//
 //     // the ID of the learner for which this data has been collected
 //     "id": number, ✅
 
@@ -102,6 +102,24 @@ const LearnerSubmissions = [
       score: 140,
     },
   },
+  // {
+  //   learner_id: 132,
+  //   assignment_id: 3,
+  //   submission: {
+  //     submitted_at: "2023-03-07",
+  //     score: 100,
+  //   },
+  // },
+  // created new submission for testing
+  // {
+  //   learner_id: 146,
+  //   assignment_id: 3,
+  //   submission: {
+  //     submitted_at: "2023-03-07",
+  //     score: 75,
+  //   },
+  // },
+  // created a new learner for testing
 ];
 
 //********************** START OF CODE ************************
@@ -117,34 +135,51 @@ function getLearnerData(course, ag, submissions) {
       // Using Helper function #2
       for (let i = 0; i < assignmentData.length - 1; i++) {
         //loop thru each assignment in assignmentData
-        const learnerData = { id: assignmentData[i].learner_id };
-        //create object 'learnerData' for each learner's data, add id as aproperty
-        const assignmentID = assignmentData[i].assignment_id;
-        //create variable for assignment number to use as key for 1st assignment
-        let assignmentPercentage2 =
-          assignmentData[i].score / assignmentData[i].pointsPossible;
-        // create variable for assignment % to use as value for 1st assigment
-        learnerData[assignmentID] = assignmentPercentage2;
-        // add 1st assignment as a property to Learner Object
-        learnerData.avg = assignmentData[i].score / assignmentData[i].pointsPossible;
-        //add average as aproperty to Learner Object
         if (assignmentData[i].learner_id == assignmentData[i + 1].learner_id) {
           //check if learner id matches learner id in the next assignment odject
+          const learnerData = { id: assignmentData[i].learner_id };
+          //create object 'learnerData' for each learner's data, add id as aproperty
+          const assignmentID = assignmentData[i].assignment_id;
+          //create variable for assignment number to use as key for 1st assignment
+          let assignmentPercentage =
+            assignmentData[i].score / assignmentData[i].pointsPossible;
+          // create variable for assignment % to use as value for 1st assigment
+          learnerData[assignmentID] = assignmentPercentage;
+          // add 1st assignment as a property to Learner Object
+          learnerData.avg =
+            assignmentData[i].score / assignmentData[i].pointsPossible;
+          //add average as aproperty to Learner Object
           const assignmentID2 = assignmentData[i + 1].assignment_id;
           //if yes- create variable for assignment number to use as key for 2nd assignment
           let score = assignmentData[i].score + assignmentData[i + 1].score;
           //combine scores together
           let pointsPossible =
-            assignmentData[i].pointsPossible + assignmentData[i + 1].pointsPossible;
+            assignmentData[i].pointsPossible +
+            assignmentData[i + 1].pointsPossible;
           //combine possible points together
           learnerData.avg = score / pointsPossible;
           // replace previous ave property in learnerData
           learnerData[assignmentID2] =
             assignmentData[i + 1].score / assignmentData[i + 1].pointsPossible;
           // add 2nd assignment as a property to Learner Object
-        } else {
-          continue;
+          expectedOutput.push(learnerData);
         }
+      }
+      const lastAssigment = assignmentData.at(-1);
+      const secondToLast = assignmentData.at(-2);
+      if (lastAssigment.learner_id !== secondToLast.learner_id) {
+        // check if last assignment isn't for the same learner as the one before it so it's not duplicated
+        const learnerData = { id: lastAssigment.learner_id };
+        //create object 'learnerData' for each learner's data, add id as aproperty
+        const assignmentID = lastAssigment.assignment_id;
+        //create variable for assignment number to use as key for 1st assignment
+        let assignmentPercentage3 =
+          lastAssigment.score / lastAssigment.pointsPossible;
+        // create variable for assignment % to use as value for 1st assigment
+        learnerData.avg = lastAssigment.score / lastAssigment.pointsPossible;
+        //add average as aproperty to Learner Object
+        learnerData[assignmentID] = assignmentPercentage3;
+        // add 1st assignment as a property to Learner Object
         expectedOutput.push(learnerData);
       }
     }
@@ -157,7 +192,6 @@ function getLearnerData(course, ag, submissions) {
 const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
 console.log(result);
 
-
 // HELPER FUNCTION #1
 function getLearnerIDs(submissions) {
   const learnerIDs = [];
@@ -169,12 +203,12 @@ function getLearnerIDs(submissions) {
       learnerIDs.push(submissions[i].learner_id);
     }
   }
-  return learnerIDs
+  return learnerIDs;
 }
 
 // HELPER FUNCTION #2
 function getAssignmentData(ag, submissions) {
-  const learnerIDs = getLearnerIDs(submissions)
+  const learnerIDs = getLearnerIDs(submissions);
   //Using helper function #1
   const assignmentData = [];
   learnerIDs.forEach((ID) => {
@@ -192,7 +226,10 @@ function getAssignmentData(ag, submissions) {
       } else {
         try {
           //check if points-possible is 0 or less- if so throw error
-          if (ag.assignments[i].points_possible <= 0 || assignment[0].submission.score > ag.assignments[i].points_possible) {
+          if (
+            ag.assignments[i].points_possible <= 0 ||
+            assignment[0].submission.score > ag.assignments[i].points_possible
+          ) {
             throw `Invalid Input: Possible point can't be zero, or Score can't be more than Points Possible`;
           } else {
             const assignmentInfo = {
@@ -230,8 +267,8 @@ function getAssignmentData(ag, submissions) {
 }
 
 // console.log(assignmentData)
-//final output of assignmentData to use to build Expected Output
-//LEARNER DATA:
+// final output of assignmentData to use to build Expected Output
+// ASSIGNMENT DATA:
 // [
 //   {
 //     score: 47,
