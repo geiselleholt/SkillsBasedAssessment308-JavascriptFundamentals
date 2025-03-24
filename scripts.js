@@ -207,12 +207,13 @@ function getAssignmentData(ag, submissions) {
         continue;
       } else {
         try {
-          //check if points-possible is 0 or less- if so throw error
-          if (
-            ag.assignments[i].points_possible <= 0 ||
+          //check if points-possible is 0 or less OR if the score is more than the points possible- if so throw error
+          if (ag.assignments[i].points_possible <= 0) {
+            throw `Invalid Input: Possible point can't be zero`;
+          } else if (
             assignment[0].submission.score > ag.assignments[i].points_possible
           ) {
-            throw `Invalid Input: Possible point can't be zero, or Score can't be more than Points Possible`;
+            throw `Invalid Input: Score can't be more than Points Possible`;
           } else {
             const assignmentInfo = {
               //create an object with each assignments info
@@ -263,8 +264,7 @@ function getSomeLearnerData(assigment) {
 }
 
 //****************************
-// console.log(assignmentData)
-// Used to build Expected Output
+// console.log(assignmentData) - Data structure used to build EXPECTED OUTPUT
 // ASSIGNMENT DATA:
 // [
 //   {
