@@ -145,6 +145,7 @@ function getLearnerData(course, ag, submissions) {
       let totalScore = 0;
       let totalPointsPossible = 0;
       const assigmentObj = {};
+      // initalizing empty variables
       learnerIDs.forEach((learnerID) => {
         //loop thru each learnerID
         let searchID = assignmentData.filter(
