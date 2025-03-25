@@ -27,5 +27,5 @@ What would you add to, or change about your application if given more time?
 If I had more time I would:
 
 - FIX THIS BUG?: My code doesn't work if a learner has 2 of the same assignemnt ids (Is this a case?)
-- Try to get a simplier approach to work not using .filter
+- Try to get a simpler approach to work not using .filter
 - Get the assignment id key to be a number instead of a string (I could use +str and force it to be a number but I think I coded it incorrectly which is why its a string)

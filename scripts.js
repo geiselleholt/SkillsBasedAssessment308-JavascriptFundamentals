@@ -148,13 +148,13 @@ function getLearnerData(course, ag, submissions) {
       // initalizing empty variables
       learnerIDs.forEach((learnerID) => {
         //loop thru each learnerID
-        let searchID = assignmentData.filter(
+        let assignmentsByLearner = assignmentData.filter(
           (item) => item.learner_id === learnerID
         );
         // matching learnerID to learner_id in assignmentData to spearate assignments by learner in its own array
-        if (searchID.length > 1) {
+        if (assignmentsByLearner.length > 1) {
           // If the learner has more than one assignment
-          searchID.forEach((assigment) => {
+          assignmentsByLearner.forEach((assigment) => {
             // loop thru each learners assignments
             totalScore += assigment.score;
             // add up scores
@@ -166,7 +166,7 @@ function getLearnerData(course, ag, submissions) {
             assigmentObj[assigment.assignment_id] = assignmentPercentage;
             // push object with assignment id as key and percentage as value to an object
           });
-          let learnerData = {
+          const learnerData = {
             id: learnerID,
             avg: totalScore / totalPointsPossible,
           };
@@ -178,7 +178,7 @@ function getLearnerData(course, ag, submissions) {
           // reset totals for next learner
           expectedOutput.push(learnerData);
         } else {
-          let learnerData = getSomeLearnerData(searchID[0]);
+          let learnerData = getSomeLearnerData(assignmentsByLearner[0]);
           // Using Helper Function #3
           expectedOutput.push(learnerData);
         }
@@ -215,10 +215,10 @@ function getAssignmentData(ag, submissions) {
   const assignmentData = [];
   learnerIDs.forEach((ID) => {
     //looping thru the learnerIDs array
-    let searchID = submissions.filter((item) => item.learner_id === ID);
+    let matchIDs = submissions.filter((item) => item.learner_id === ID);
     // matching the learnerID to ag leaner-id
     for (let i = 0; i < ag.assignments.length; i++) {
-      let assignment = searchID.filter(
+      let assignment = matchIDs.filter(
         //matching assignment-id in submissions to ag assignment.id
         (item) => item.assignment_id === ag.assignments[i].id
       );
