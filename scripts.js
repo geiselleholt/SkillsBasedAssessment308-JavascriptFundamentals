@@ -57,6 +57,12 @@ const AssignmentGroup = {
       due_at: "3156-11-15",
       points_possible: 500,
     },
+    {
+      id: 4,
+      name: "Code the Universe",
+      due_at: "2023-01-15",
+      points_possible: 200,
+    },
   ],
 };
 
@@ -102,23 +108,23 @@ const LearnerSubmissions = [
       score: 140,
     },
   },
-  // {
-  //   learner_id: 132,
-  //   assignment_id: 3,
-  //   submission: {
-  //     submitted_at: "2023-03-07",
-  //     score: 100,
-  //   },
-  // },
+  {
+    learner_id: 132,
+    assignment_id: 4,
+    submission: {
+      submitted_at: "2023-03-07",
+      score: 100,
+    },
+  },
   // created new submission for testing
-  // {
-  //   learner_id: 146,
-  //   assignment_id: 2,
-  //   submission: {
-  //     submitted_at: "2023-03-07",
-  //     score: 75,
-  //   },
-  // },
+  {
+    learner_id: 146,
+    assignment_id: 2,
+    submission: {
+      submitted_at: "2023-03-07",
+      score: 75,
+    },
+  },
   // created a new learner for testing
 ];
 
@@ -133,36 +139,33 @@ function getLearnerData(course, ag, submissions) {
     } else {
       let assignmentData = getAssignmentData(ag, submissions);
       // Using Helper function #2
-      for (let i = 0; i < assignmentData.length - 1; i++) {
-        //loop thru each assignment in assignmentData
-        if (assignmentData[i].learner_id == assignmentData[i + 1].learner_id) {
-          //check if learner id matches learner id in the next assignment odject
-          let learnerData = getSomeLearnerData(assignmentData[i]);
-          // Using Helper Function #3
-          const assignmentID2 = assignmentData[i + 1].assignment_id;
-          //if yes- create variable for assignment number to use as key for 2nd assignment
-          let score = assignmentData[i].score + assignmentData[i + 1].score;
-          //combine scores together
-          let pointsPossible =
-            assignmentData[i].pointsPossible +
-            assignmentData[i + 1].pointsPossible;
-          //combine possible points together
-          learnerData.avg = score / pointsPossible;
-          // replace previous ave property in learnerData
-          learnerData[assignmentID2] =
-            assignmentData[i + 1].score / assignmentData[i + 1].pointsPossible;
-          // add 2nd assignment as a property to Learner Object
+      let learnerIDs = getLearnerIDs(assignmentData);
+      // Using Helper Function #1
+      let totalScore = 0;
+      let totalPointsPossible = 0;
+      const assigmentObj = {};
+      learnerIDs.forEach((learnerID) => {
+        //loop thru each learnerID
+        let searchID = assignmentData.filter(
+          (item) => item.learner_id === learnerID
+        );
+        if (searchID.length > 1) {
+          searchID.forEach((assigment) => {
+            totalScore += assigment.score;
+            totalPointsPossible += assigment.pointsPossible;
+            let assignmentPercentage =
+              assigment.score / assigment.pointsPossible;
+            assigmentObj[assigment.assignment_id] = assignmentPercentage;
+          });
+          let learnerData = { id: learnerID };
+          learnerData.avg = totalScore / totalPointsPossible;
+          Object.assign(learnerData, assigmentObj);
+          expectedOutput.push(learnerData);
+        } else {
+          let learnerData = getSomeLearnerData(searchID[0]);
           expectedOutput.push(learnerData);
         }
-      }
-      const lastAssigment = assignmentData.at(-1);
-      const secondToLast = assignmentData.at(-2);
-      if (lastAssigment.learner_id !== secondToLast.learner_id) {
-        // check if last assignment isn't for the same learner as the one before it so it's not duplicated
-        let learnerData = getSomeLearnerData(lastAssigment);
-        // Using Helper Function #3
-        expectedOutput.push(learnerData);
-      }
+      });
     }
   } catch (err) {
     console.log(err);
@@ -254,11 +257,11 @@ function getSomeLearnerData(assigment) {
   //create object 'learnerData' for each learner's data, add id as aproperty
   const assignmentID = assigment.assignment_id;
   //create variable for assignment number to use as key for 1st assignment
-  let assignmentPercentage3 = assigment.score / assigment.pointsPossible;
+  let assignmentPercentage = assigment.score / assigment.pointsPossible;
   // create variable for assignment % to use as value for 1st assigment
   learnerData.avg = assigment.score / assigment.pointsPossible;
   //add average as aproperty to Learner Object
-  learnerData[assignmentID] = assignmentPercentage3;
+  learnerData[assignmentID] = assignmentPercentage;
   // add 1st assignment as a property to Learner Object
   return learnerData;
 }
