@@ -57,12 +57,13 @@ const AssignmentGroup = {
       due_at: "3156-11-15",
       points_possible: 500,
     },
-    {
-      id: 4,
-      name: "Code the Universe",
-      due_at: "2023-01-15",
-      points_possible: 200,
-    },
+    // {
+    //   id: 4,
+    //   name: "Code the Universe",
+    //   due_at: "2023-01-15",
+    //   points_possible: 200,
+    // },
+    // created new assignment for testing
   ],
 };
 
@@ -108,23 +109,23 @@ const LearnerSubmissions = [
       score: 140,
     },
   },
-  {
-    learner_id: 132,
-    assignment_id: 4,
-    submission: {
-      submitted_at: "2023-03-07",
-      score: 100,
-    },
-  },
+  // {
+  //   learner_id: 132,
+  //   assignment_id: 4,
+  //   submission: {
+  //     submitted_at: "2023-03-07",
+  //     score: 100,
+  //   },
+  // },
   // created new submission for testing
-  {
-    learner_id: 146,
-    assignment_id: 2,
-    submission: {
-      submitted_at: "2023-03-07",
-      score: 75,
-    },
-  },
+  // {
+  //   learner_id: 146,
+  //   assignment_id: 2,
+  //   submission: {
+  //     submitted_at: "2023-03-07",
+  //     score: 75,
+  //   },
+  // },
   // created a new learner for testing
 ];
 
@@ -149,20 +150,35 @@ function getLearnerData(course, ag, submissions) {
         let searchID = assignmentData.filter(
           (item) => item.learner_id === learnerID
         );
+        // matching learnerID to learner_id in assignmentData to spearate assignments by learner in its own array
         if (searchID.length > 1) {
+          // If the learner has more than one assignment
           searchID.forEach((assigment) => {
+            // loop thru each learners assignments
             totalScore += assigment.score;
+            // add up scores
             totalPointsPossible += assigment.pointsPossible;
+            // add up points possible
             let assignmentPercentage =
               assigment.score / assigment.pointsPossible;
+            // calculate percentage and cache in variable
             assigmentObj[assigment.assignment_id] = assignmentPercentage;
+            // push object with assignment id as key and percentage as value to an object
           });
-          let learnerData = { id: learnerID };
-          learnerData.avg = totalScore / totalPointsPossible;
+          let learnerData = {
+            id: learnerID,
+            avg: totalScore / totalPointsPossible,
+          };
+          // create object learnerData to push to expectedOutput populated with id and avg
           Object.assign(learnerData, assigmentObj);
+          // Add assignment properties into learnerData
+          totalScore = 0;
+          totalPointsPossible = 0;
+          // reset totals for next learner
           expectedOutput.push(learnerData);
         } else {
           let learnerData = getSomeLearnerData(searchID[0]);
+          // Using Helper Function #3
           expectedOutput.push(learnerData);
         }
       });
